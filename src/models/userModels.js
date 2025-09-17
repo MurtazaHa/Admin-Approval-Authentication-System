@@ -1,6 +1,6 @@
 const pool = require("../config/db");
 
-// New user create karne ka function
+
 const createUser = async (name, email, password, role = "individual") => {
   const result = await pool.query(
     `INSERT INTO users (name, email, password, role) 
@@ -10,10 +10,15 @@ const createUser = async (name, email, password, role = "individual") => {
   return result.rows[0];
 };
 
-// Email se user find karne ka function
+
 const findUserByEmail = async (email) => {
   const result = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
   return result.rows[0];
 };
 
-module.exports = { createUser, findUserByEmail };
+const ApprovedUser = async (userId) => {
+  const result = await pool.query("UPDATE users SET is_approved = true WHERE id = $1", [userId]);
+  return result.rows[0];
+};
+
+module.exports = { createUser, findUserByEmail, ApprovedUser };
